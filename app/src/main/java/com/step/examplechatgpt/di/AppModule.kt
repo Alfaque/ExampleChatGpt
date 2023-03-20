@@ -1,10 +1,16 @@
 package com.step.schools.di
 
+import android.content.Context
+import androidx.room.Room
 import com.example.examplecleanarch.network.ApiService
+import com.step.examplechatgpt.dao.ChoiceDao
+import com.step.examplechatgpt.db.AppDatabase
 import com.step.examplechatgpt.utils.BASE_URL
+import com.step.examplechatgpt.utils.DB_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -47,9 +53,19 @@ object AppModule {
     fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
 
 
+    @Provides
+    fun provideChannelDao(appDatabase: AppDatabase): ChoiceDao {
+        return appDatabase.choiceDao()
+    }
 
-
-
-
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
+        return Room.databaseBuilder(
+            appContext,
+            AppDatabase::class.java,
+            DB_NAME
+        ).build()
+    }
 
 }

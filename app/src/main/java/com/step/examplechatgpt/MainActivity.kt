@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.examplecleanarch.resource.Status
 import com.google.gson.Gson
 import com.step.examplechatgpt.utils.showShortToast
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        viewModel.submitQuestion("Question")
+        viewModel.submitQuestion("what is ChatGPt")
 
         viewModel.liveData.observe(this) { response ->
 
@@ -48,6 +49,23 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+
+        lifecycleScope.launchWhenCreated {
+
+            viewModel.setDaoObserver().observe(this@MainActivity) {
+                Log.d(TAG, "onCreate: ")
+
+                if (it.isNullOrEmpty()) {
+                    // no data found
+                } else {
+                    // data found
+                }
+
+            }
+
+        }
+
 
     }
 }
